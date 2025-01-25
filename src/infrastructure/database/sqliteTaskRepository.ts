@@ -48,7 +48,7 @@ export class SQLiteTaskRepository implements TaskRepository {
   }
 
   async findAll(): Promise<Task[]> {
-    const result = this.db.query('SELECT * FROM tasks').all() as any[];
+    const result = this.db.query('SELECT * FROM tasks').all() as Task[];
     return result.map(row => ({
       id: row.id,
       title: row.title,
@@ -56,6 +56,48 @@ export class SQLiteTaskRepository implements TaskRepository {
       completed: Boolean(row.completed),
       createdAt: new Date(row.createdAt),
     }));
+  }
+
+  async update(
+    id: string,
+    data: Partial<Omit<Task, 'id' | 'createdAt'>>
+  ): Promise<Task | null> {
+    const currentTask = await this.findById(id);
+    if (!currentTask) return null;
+
+    const updatedTask = { ...currentTask, ...data };
+
+    this.db
+      .query(
+        `UPDATE  tasks SET 
+        title = $title, 
+        description = $description,
+        completed = $completed
+      WHERE id = $id
+       `
+      )
+      .run({
+        $id: id,
+        $title: updatedTask.title,
+        $description: updatedTask.description,
+        $completed: updatedTask.completed ? 1 : 0,
+      });
+
+    return updatedTask;
+  }
+
+  async findById(id: string): Promise<Task | null> {
+    const task = this.db
+      .query('SELECT * FROM tasks WHERE id = $id')
+      .get({ $id: id }) as unknown as Task;
+    if (!task) return null;
+    return {
+      id: task.id,
+      title: task.title,
+      description: task.description,
+      completed: Boolean(task.completed),
+      createdAt: new Date(task.createdAt),
+    };
   }
 
   async clear() {

@@ -41,4 +41,30 @@ describe('API HTTP', () => {
       'String must contain at least 3 character(s)'
     );
   });
+
+  it('PUT /tasks/:id actualiza una tarea existente', async () => {
+    const postResponse = await fetch(baseUrl, {
+      method: 'POST',
+      body: JSON.stringify({ title: 'Estudiar Bun' }),
+    });
+    const task = await postResponse.json();
+    
+    const putResponse = await fetch(`${baseUrl}/${task.id}`, {
+      method: 'PUT',
+      body: JSON.stringify({ completed: true }),
+    });
+
+    expect(putResponse.status).toBe(200);
+    const updatedTask = await putResponse.json();
+    expect(updatedTask.completed).toBe(true);
+  });
+
+  it('PUT /tasks/:id falla con ID inexistente', async () => {
+    const response = await fetch(`${baseUrl}/fake-id`, {
+      method: 'PUT',
+      body: JSON.stringify({ title: 'No existo' }),
+    });
+
+    expect(response.status).toBe(404);
+  });
 });
