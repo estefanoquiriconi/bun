@@ -13,8 +13,8 @@
 1. **Clona el repositorio**:
 
 ```bash
-git clone https://github.com/estefanoquiriconi/bun-todo-api.git
-cd bun-todo-api
+git clone https://github.com/estefanoquiriconi/bun.git
+cd bun
 ```
 
 2. **Instala dependencias**:
