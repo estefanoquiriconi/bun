@@ -1,0 +1,64 @@
+import { Database } from 'bun:sqlite';
+import type { TaskRepository } from '../../core/repositories/taskRepository';
+import type { Task } from '../../core/domain/task';
+
+export class SQLiteTaskRepository implements TaskRepository {
+  private db: Database;
+
+  constructor() {
+    this.db = new Database('tasks.db');
+    this.initDatabase();
+  }
+
+  private initDatabase() {
+    this.db
+      .query(
+        `
+        CREATE TABLE IF NOT EXISTS tasks (
+            id TEXT PRIMARY KEY,
+            title TEXT NOT NULL,
+            description TEXT,
+            completed BOOLEAN DEFAULT FALSE,
+            createdAt DATETIME
+        );`
+      )
+      .run();
+  }
+
+  async create(task: Omit<Task, 'id' | 'createdAt'>): Promise<Task> {
+    const id = crypto.randomUUID();
+    const createdAt = new Date();
+
+    this.db
+      .query(
+        `
+        INSERT INTO tasks (id, title, description, completed, createdAt)
+        VALUES ($id, $title, $description, $completed, $createdAt)
+        `
+      )
+      .run({
+        $id: id,
+        $title: task.title,
+        $description: task.description,
+        $completed: task.completed ? 1 : 0,
+        $createdAt: createdAt.toISOString(),
+      });
+
+    return { ...task, id, createdAt };
+  }
+
+  async findAll(): Promise<Task[]> {
+    const result = this.db.query('SELECT * FROM tasks').all() as any[];
+    return result.map(row => ({
+      id: row.id,
+      title: row.title,
+      description: row.description,
+      completed: Boolean(row.completed),
+      createdAt: new Date(row.createdAt),
+    }));
+  }
+
+  async clear() {
+    this.db.query('DELETE FROM tasks').run();
+  }
+}

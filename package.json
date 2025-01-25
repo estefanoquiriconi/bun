@@ -1,0 +1,19 @@
+{
+  "name": "bun-todo-api",
+  "module": "index.ts",
+  "type": "module",
+  "scripts": {
+    "start": "bun run src/infrastructure/http/server.ts",
+    "test": "bun test",
+    "dev": "bun run --watch src/infrastructure/http/server.ts"
+  },
+  "devDependencies": {
+    "@types/bun": "^1.2.0"
+  },
+  "peerDependencies": {
+    "typescript": "^5.7.3"
+  },
+  "dependencies": {
+    "zod": "^3.24.1"
+  }
+}
