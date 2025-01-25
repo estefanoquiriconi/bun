@@ -100,6 +100,14 @@ export class SQLiteTaskRepository implements TaskRepository {
     };
   }
 
+  async delete(id: string): Promise<boolean> {
+    const result = this.db
+      .query('DELETE FROM tasks WHERE id = $id')
+      .run({ $id: id });
+
+    return result.changes > 0;
+  }
+
   async clear() {
     this.db.query('DELETE FROM tasks').run();
   }

@@ -7,4 +7,5 @@ export interface TaskRepository {
     id: string,
     data: Partial<Omit<Task, 'id' | 'createdAt'>>
   ): Promise<Task | null>;
+  delete(id: string): Promise<boolean>;
 }

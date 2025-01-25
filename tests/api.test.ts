@@ -48,7 +48,7 @@ describe('API HTTP', () => {
       body: JSON.stringify({ title: 'Estudiar Bun' }),
     });
     const task = await postResponse.json();
-    
+
     const putResponse = await fetch(`${baseUrl}/${task.id}`, {
       method: 'PUT',
       body: JSON.stringify({ completed: true }),

@@ -3,7 +3,7 @@ import { z } from 'zod';
 export function errorHandler(error: unknown): Response {
   if (error instanceof z.ZodError) {
     return Response.json(
-      { error: 'Datos inválidos', details: error.errors },
+      { error: 'Invalid data', details: error.errors },
       { status: 400 }
     );
   }
@@ -18,7 +18,7 @@ export function errorHandler(error: unknown): Response {
   }
 
   return Response.json(
-    { error: 'Error desconocido' },
+    { error: 'Unknown error' },
     {
       status: 500,
     }

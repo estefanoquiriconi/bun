@@ -23,8 +23,15 @@ describe('UpdateTaskUseCase', () => {
   it('devuelve null si la tarea no existe', async () => {
     const mockRepoError = {
       update: async () => null,
-      create: async () => { throw new Error('Not implemented'); },
-      findAll: async () => { throw new Error('Not implemented'); },
+      create: async () => {
+        throw new Error('Not implemented');
+      },
+      findAll: async () => {
+        throw new Error('Not implemented');
+      },
+      delete: async () => {
+        throw new Error('Not implemented');
+      },
     } as TaskRepository;
 
     const useCase = new UpdateTaskUseCase(mockRepoError);
