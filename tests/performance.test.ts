@@ -15,7 +15,7 @@ describe('Rendimiento', () => {
 
       const end = performance.now();
       console.log(
-        `Tiempo para 1000 solicitudes: ${(end - start).toFixed(2)}ms`
+        `Tiempo para 100 solicitudes: ${(end - start).toFixed(2)}ms`
       );
       expect(end - start).toBeLessThan(1000);
     },
